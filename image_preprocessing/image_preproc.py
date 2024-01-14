@@ -6,24 +6,24 @@ DATA_PATH = 'data_image'
 MAIN_FILE_PATH_SAVE = 'good_data'
 
 #read class names
-class_name = os.listdir(f'./{DATA_PATH}')
+class_name = os.listdir(f'../{DATA_PATH}')
 print(f'Class names: {class_name}')
 
 #create main directory
-if not os.path.exists(f'./{MAIN_FILE_PATH_SAVE}'):
+if not os.path.exists(f'../{MAIN_FILE_PATH_SAVE}'):
     print('Create main directory')
-    os.mkdir(f'./{MAIN_FILE_PATH_SAVE}')
+    os.mkdir(f'../{MAIN_FILE_PATH_SAVE}')
 
 #create directory for each class
 for name in class_name:
-    if not os.path.exists(f'./{MAIN_FILE_PATH_SAVE}/{name}'):
+    if not os.path.exists(f'../{MAIN_FILE_PATH_SAVE}/{name}'):
         print(f'Create {name} directory')
-        os.mkdir(f'./{MAIN_FILE_PATH_SAVE}/{name}')
+        os.mkdir(f'../{MAIN_FILE_PATH_SAVE}/{name}')
 
 #load image for each class and rotate them
 for names in class_name:
     print(f'Preproccess {names}')
-    images_name = os.listdir(f'./{DATA_PATH}/{names}')
+    images_name = os.listdir(f'../{DATA_PATH}/{names}')
 
     for image in images_name:
         # rotate image
