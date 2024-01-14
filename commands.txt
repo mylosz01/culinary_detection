@@ -1,2 +1,0 @@
-yolo task=detect mode=train epochs=10 data=data_custom.yaml model=yolov8m.pt imgsz=640 batch=4 device=0
-yolo task=detect mode=predict model=yolov8_custom.pt show=True conf=0.5 source=noz1.jpg

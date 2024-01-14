@@ -1,5 +1,5 @@
-train: D:\Python\culinary_project\train
-val: D:\Python\culinary_project\val
+train: D:\Python\culinary_project\train_data\train
+val: D:\Python\culinary_project\train_data\val
 
 nc: 3
 
