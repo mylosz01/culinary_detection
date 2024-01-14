@@ -45,6 +45,9 @@ while cap.isOpened():
 
         img = frame.copy()
 
+        #add detection line zone
+        cv2.line(img,(FRAME_WIDTH // 2,0),(FRAME_WIDTH//2,FRAME_HEIGHT),(0,255,255),8)
+
         print('NEW FRAME...\n')
         tracker.update(results)
 
@@ -53,12 +56,12 @@ while cap.isOpened():
         tracker.show_stats(img)
         cv2.imshow('TEst',cv2.resize(img,(FRAME_WIDTH,FRAME_HEIGHT)))
         
-        """key = cv2.waitKey(0) & 0XFF
+        key = cv2.waitKey(0) & 0XFF
         if key == ord('q'):
-            break"""
-
-        if cv2.waitKey(1) == ord('q'):
             break
+
+        """if cv2.waitKey(1) == ord('q'):
+            break"""
 
     else:
         #return frame

@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import math
 
+FRAME_WIDTH = 1280
+FRAME_HEIGHT = 720
 
 class Object:
 
@@ -29,6 +31,7 @@ class Tracker:
         self.font_text = cv2.FONT_HERSHEY_PLAIN
         self.thickness_text = 2
         self.id_count = 0
+        self.zone_width = 30
 
 
     def update(self,predict_results):
@@ -37,15 +40,21 @@ class Tracker:
         
         objects_list = {}
 
-        detected_objects = predict_results[0].boxes
-        for item in detected_objects:
+        list_objects_in_zone = []
+        #check if objects are in zone
+        for item in predict_results[0].boxes:
+            if item.xywh[0][0] > (FRAME_WIDTH//2) - self.zone_width and item.xywh[0][0] < (FRAME_WIDTH//2) + self.zone_width:
+                list_objects_in_zone.append(item)
+
+        print(f'OBJECTS IN ZONE {len(list_objects_in_zone)}')
+        for item in list_objects_in_zone:
             #print(f'TRACKER FIND {self.cls_name[int(item.cls[0])]}')
             #print(f'TRACKER POS xyxy: {item.xyxy[0]}')
             #print(f'TRACKER POS xywh: {item.xywh[0]}')
 
             #check item
             new_object = Object(item)
-            print(f'NEW OBJECT : {new_object}')
+            #print(f'NEW OBJECT : {new_object}')
 
             same_object_detected = False
             
@@ -54,7 +63,7 @@ class Tracker:
                 
                 #calculate distance beetween objects in dict and new object
                 dist = math.hypot(obj.center_pt[0] - new_object.center_pt[0], obj.center_pt[1] - new_object.center_pt[1])
-                print(f'Distance: {dist}')
+                #print(f'Distance: {dist}')
 
                 if dist < 200:
                     if new_object.class_id != obj.class_id:
@@ -73,15 +82,10 @@ class Tracker:
                 self.items_counter[new_object.class_id] += 1
                 self.id_count += 1
 
-        print("CURRENT OBJECTS:")
-        for idx, item in objects_list.items():
-            print(f'ITEM {idx}\n {item}')
-
-
         #update detected objects
         for idx, obj in self.current_objects.items():
             is_object_used = False
-            for item in detected_objects:
+            for item in list_objects_in_zone:
                 current_item = Object(item)
                 
                 #print(f'Current object :{idx}\n {obj}')
@@ -90,11 +94,10 @@ class Tracker:
                     break
 
             if is_object_used == False:
-                print(f'DELETING OBJECT: {idx} {obj}')
+                #print(f'DELETING OBJECT: {idx} {obj}')
                 objects_list.pop(idx,None)
 
         self.current_objects = objects_list.copy()
-
 
 
     def annotate_objects(self,img):
@@ -129,5 +132,5 @@ class Tracker:
         x, y = pos
         text_size, _ = cv2.getTextSize(text, font, font_scale, font_thickness)
         text_w, text_h = text_size
-        cv2.rectangle(img, pos, (x + text_w, y + text_h), text_color_bg, -1)
+        cv2.rectangle(img, pos, (x + text_w, y + text_h), text_color_bg, - 1)
         cv2.putText(img, text, (x, y + text_h + font_scale - 1), font, font_scale, text_color, font_thickness)
