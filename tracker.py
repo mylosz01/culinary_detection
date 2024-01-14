@@ -1,9 +1,10 @@
 import numpy as np
 import cv2
 import math
+import config
 
-FRAME_WIDTH = 1280
-FRAME_HEIGHT = 720
+FRAME_WIDTH = config.FRAME_WIDTH
+FRAME_HEIGHT = config.FRAME_HEIGHT
 
 class Object:
 
@@ -46,7 +47,7 @@ class Tracker:
             if item.xywh[0][0] > (FRAME_WIDTH//2) - self.zone_width and item.xywh[0][0] < (FRAME_WIDTH//2) + self.zone_width:
                 list_objects_in_zone.append(item)
 
-        print(f'OBJECTS IN ZONE {len(list_objects_in_zone)}')
+        #print(f'OBJECTS IN ZONE {len(list_objects_in_zone)}')
         for item in list_objects_in_zone:
             #print(f'TRACKER FIND {self.cls_name[int(item.cls[0])]}')
             #print(f'TRACKER POS xyxy: {item.xyxy[0]}')
@@ -85,16 +86,16 @@ class Tracker:
         #update detected objects
         for idx, obj in self.current_objects.items():
             is_object_used = False
+
             for item in list_objects_in_zone:
                 current_item = Object(item)
-                
-                #print(f'Current object :{idx}\n {obj}')
+
                 if obj.center_pt == current_item.center_pt:
                     is_object_used = True
                     break
-
-            if is_object_used == False:
-                #print(f'DELETING OBJECT: {idx} {obj}')
+            
+            #deleting not used object
+            if is_object_used == False:  
                 objects_list.pop(idx,None)
 
         self.current_objects = objects_list.copy()
