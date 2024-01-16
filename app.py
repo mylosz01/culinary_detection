@@ -27,7 +27,7 @@ while camera.cap.isOpened():
     #read frame from capture
     ret, frame = camera.read()
 
-    if ret is not None:
+    if ret:
         img = cv2.resize(frame,(config.FRAME_WIDTH,config.FRAME_HEIGHT))
         #imgsz=(1088,736)
         #detect objects from single frame
@@ -59,7 +59,7 @@ while camera.cap.isOpened():
 
 #close objects
 camera.stop()
-print(f'FPS: {(frame_count / (time.time() - start_time))}')
+print(f'FPS: {(frame_count / (time.time() - start_time)):.2f}')
 print('STOP...')
 camera.cap.release()
 cv2.destroyAllWindows()

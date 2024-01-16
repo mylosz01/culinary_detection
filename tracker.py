@@ -124,9 +124,9 @@ class Tracker:
 
 
     def show_stats(self,frame):
-        self.draw_text(frame,f' fork : {self.items_counter[0]}',cv2.FONT_HERSHEY_PLAIN,(10,20),2,2,(0,0,255),(100,100,100))
-        self.draw_text(frame,f' knife: {self.items_counter[1]}',cv2.FONT_HERSHEY_PLAIN,(10,70),2,2,(0,255,0),(100,100,100))
-        self.draw_text(frame,f'spoon: {self.items_counter[2]}',cv2.FONT_HERSHEY_PLAIN,(10,120),2,2,(255,255,0),(100,100,100))
+        self.draw_text(frame,f' fork : {self.items_counter[0]}',cv2.FONT_HERSHEY_PLAIN,(10,20),2,2,self.color_rect[0],(0,0,0))
+        self.draw_text(frame,f' knife: {self.items_counter[1]}',cv2.FONT_HERSHEY_PLAIN,(10,70),2,2,self.color_rect[1],(0,0,0))
+        self.draw_text(frame,f'spoon: {self.items_counter[2]}',cv2.FONT_HERSHEY_PLAIN,(10,120),2,2,self.color_rect[2],(0,0,0))
 
 
     def draw_text(self,img, text, font=cv2.FONT_HERSHEY_PLAIN, pos=(0, 0), font_scale=3, font_thickness=2, text_color=(0, 255, 0), text_color_bg=(0, 0, 0)):
