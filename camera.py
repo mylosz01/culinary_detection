@@ -17,9 +17,11 @@ class VideoCaptureThreading:
         self.started = False
         self.read_lock = threading.Lock()
 
+    #set capture value
     def set(self, var1, var2):
         self.cap.set(var1, var2)
 
+    #start thread
     def start(self):
         if self.started:
             print('[!] Thread is used.')
@@ -29,6 +31,7 @@ class VideoCaptureThreading:
         self.thread.start()
         return self
 
+    #update frame
     def update(self):
         while self.started:
             self.grabbed, self.frame = self.cap.read()
@@ -36,15 +39,18 @@ class VideoCaptureThreading:
                 self.grabbed = grabbed
                 self.frame = frame"""
 
+    #read frame
     def read(self):
         """with self.read_lock:
             frame = self.frame.copy()
             grabbed = self.grabbed"""
         return self.grabbed, self.frame
 
+    #stop thread
     def stop(self):
         self.started = False
         self.thread.join()
 
+    #close object
     def __exit__(self):
         self.cap.release()

@@ -5,17 +5,21 @@ import config
 import time
 from camera import VideoCaptureThreading
 
-#camera thread object
-camera = VideoCaptureThreading(src = 'test_2.mp4', width=config.FRAME_WIDTH, height= config.FRAME_HEIGHT)
+#IP CAMERA
+URL_CAMERA = 'https://10.128.122.199:8080/video'
 
-#check camera
+#camera thread object
+camera = VideoCaptureThreading(src = URL_CAMERA, width=config.FRAME_WIDTH, height= config.FRAME_HEIGHT)
+
+#check available camera
 if camera is None or not camera.cap.isOpened():
     print('Error: camera is not available')
 
-#read the model
+#read the trained model
 culinaryDetector = YOLO(config.MODEL_NAME)
 tracker = tr.Tracker()
 
+#start camera thread
 print('START...')
 camera.start()
 frame_count = 0
@@ -29,12 +33,14 @@ while camera.cap.isOpened():
 
     if ret:
         img = cv2.resize(frame,(config.FRAME_WIDTH,config.FRAME_HEIGHT))
-        #imgsz=(1088,736)
+        
         #detect objects from single frame
-        results = culinaryDetector.predict(img,imgsz=(640,480), device=0, conf=0.75, verbose=False,stream_buffer=True)
+        results = culinaryDetector.predict(img,imgsz=(1664,1280), device=0, conf=0.70, verbose=False, stream_buffer=True)
 
         #add detection line zone
+        #cv2.line(img,(config.FRAME_WIDTH // 2 + tracker.zone_width,0),(config.FRAME_WIDTH//2 + tracker.zone_width,config.FRAME_HEIGHT),(122,233,54),3)
         cv2.line(img,(config.FRAME_WIDTH // 2,0),(config.FRAME_WIDTH//2,config.FRAME_HEIGHT),(0,255,255),8)
+        #cv2.line(img,(config.FRAME_WIDTH // 2 - tracker.zone_width,0),(config.FRAME_WIDTH//2 - tracker.zone_width,config.FRAME_HEIGHT),(122,32,10),3)
 
         #update position of objects
         tracker.update(results)
@@ -44,6 +50,7 @@ while camera.cap.isOpened():
 
         #show statistics
         tracker.show_stats(img)
+
         #display final frame
         cv2.imshow('Culinary detect app',img)
         
@@ -51,13 +58,19 @@ while camera.cap.isOpened():
         """key = cv2.waitKey(0) & 0XFF
         if key == ord('q'):
             break"""
+        
+        #reset statistic
+        if cv2.waitKey(1) == ord('r'):
+            tracker.reset_stats()
+
     frame_count += 1
 
     #exit loop
     if cv2.waitKey(1) == ord("q"):
        break
+    
 
-#close objects
+#close all objects
 camera.stop()
 print(f'FPS: {(frame_count / (time.time() - start_time)):.2f}')
 print('STOP...')
