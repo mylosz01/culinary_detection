@@ -1,0 +1,9 @@
+#Train the model CLI
+yolo task=detect mode=train epochs=50 data=data_custom.yaml model=yolov8s.pt imgsz=640 batch=4 device=0 amp=False
+yolo task=detect mode=train epochs=10 data=data_custom.yaml model=yolov8s.pt imgsz=640 batch=4 device=0
+
+#Predict object CLI
+yolo task=detect mode=predict model=yolov8_custom.pt show=True conf=0.5 source=noz1.jpg
+yolo task=detect mode=predict model=best.pt conf=0.5 source=testowanie/
+
+yolo predict model=best_50.pt source='http://192.168.0.241:8080/video' conf=0.6 show=True
